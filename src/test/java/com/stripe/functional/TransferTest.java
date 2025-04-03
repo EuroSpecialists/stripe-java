@@ -70,3 +70,33 @@ public class TransferTest extends BaseStripeTest {
     verifyRequest(ApiResource.RequestMethod.GET, "/v1/transfers", params);
   }
 }
+dependencies {
+  implementation 'com.stripe:stripe-java:20.94.0'
+}import com.stripe.Stripe;
+import com.stripe.exception.StripeException;
+import com.stripe.model.Transfer;
+import com.stripe.param.TransferCreateParams;
+
+public class StripeTransfer {
+    public static void main(String[] args) {
+        // Set your secret key. Remember to switch to your live secret key in production.
+        // See your keys here: https://dashboard.stripe.com/apikeys
+        Stripe.apiKey = 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;
+
+        TransferCreateParams params =
+          TransferCreateParams.builder()
+            .setSourceType(TransferCreateParams.SourceType.BANK_ACCOUNT)
+            .setAmount(1154866L) // Amount in cents, so $11548.66
+            .setCurrency("usd")
+            .setDestination("acct_1R49ZmRxxsLYJXXn")
+            .setDescription("amount owed")
+            .build();
+
+        try {
+            Transfer transfer = Transfer.create(params);
+            System.out.println("Transfer created successfully: " + transfer);
+        } catch (StripeException e) {
+            e.printStackTrace();
+        }
+    }
+}
